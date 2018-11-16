@@ -11,7 +11,7 @@ public class TableFixing : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        this.collisionRegion = GameObject.GetComponent<Collider>();
+        // this.collisionRegion = GameObject.GetComponent<Collider>();
 	}
 	
 	// Update is called once per frame
