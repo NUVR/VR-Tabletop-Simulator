@@ -11,7 +11,7 @@ public class PingPongBounce : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        var direction = Vector3.Reflect(ball.position, collision.contacts[0].point);
+        var direction = Vector3.Reflect(ball.position.normalized, collision.contacts[0].normal);
         ball.velocity = direction * 5;
         //foreach (ContactPoint contact in collision.contacts)
         //{
