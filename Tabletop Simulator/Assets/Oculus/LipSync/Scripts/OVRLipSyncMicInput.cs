@@ -1,31 +1,26 @@
-﻿/************************************************************************************
+/************************************************************************************
 Filename    :   OVRLipSyncMicInput.cs
 Content     :   Interface to microphone input
 Created     :   May 12, 2015
-Copyright   :   Copyright Facebook Technologies, LLC and its affiliates.
-                All rights reserved.
+Copyright   :   Copyright 2015 Oculus VR, Inc. All Rights reserved.
 
-Licensed under the Oculus Audio SDK License Version 3.3 (the "License");
-you may not use the Oculus Audio SDK except in compliance with the License,
+Licensed under the Oculus VR Rift SDK License Version 3.1 (the "License");
+you may not use the Oculus VR Rift SDK except in compliance with the License,
 which is provided at the time of installation or download, or which
 otherwise accompanies this software in either electronic or hard copy form.
 
 You may obtain a copy of the License at
 
-https://developer.oculus.com/licenses/audio-3.3/
+http://www.oculusvr.com/licenses/LICENSE-3.1
 
-Unless required by applicable law or agreed to in writing, the Oculus Audio SDK
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
-
-using System;
 using UnityEngine;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
-using System.Threading;
+using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
 
@@ -295,17 +290,9 @@ public class OVRLipSyncMicInput : MonoBehaviour
         //Starts recording
         audioSource.clip = Microphone.Start(selectedDevice, true, 1, micFrequency);
 
-        Stopwatch timer = Stopwatch.StartNew();
-
         // Wait until the recording has started
-        while (!(Microphone.GetPosition(selectedDevice) > 0) && timer.Elapsed.TotalMilliseconds < 1000) {
-            Thread.Sleep(50);
-        }
+        while (!(Microphone.GetPosition(selectedDevice) > 0)) { }
 
-        if (Microphone.GetPosition(selectedDevice) <= 0)
-        {
-            throw new Exception("Timeout initializing microphone " + selectedDevice);
-        }
         // Play the audio source
         audioSource.Play();
     }
@@ -324,10 +311,6 @@ public class OVRLipSyncMicInput : MonoBehaviour
         {
             audioSource.Stop();
         }
-
-        // Reset to stop mouth movement
-        OVRLipSyncContext context = GetComponent<OVRLipSyncContext>();
-        context.ResetContext();
 
         Microphone.End(selectedDevice);
     }

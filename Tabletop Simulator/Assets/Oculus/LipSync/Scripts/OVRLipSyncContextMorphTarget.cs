@@ -1,20 +1,19 @@
-﻿/************************************************************************************
+/************************************************************************************
 Filename    :   OVRLipSyncContextMorphTarget.cs
 Content     :   This bridges the viseme output to the morph targets
 Created     :   August 7th, 2015
-Copyright   :   Copyright Facebook Technologies, LLC and its affiliates.
-                All rights reserved.
+Copyright   :   Copyright 2015 Oculus VR, Inc. All Rights reserved.
 
-Licensed under the Oculus Audio SDK License Version 3.3 (the "License");
-you may not use the Oculus Audio SDK except in compliance with the License,
+Licensed under the Oculus VR Rift SDK License Version 3.1 (the "License");
+you may not use the Oculus VR Rift SDK except in compliance with the License,
 which is provided at the time of installation or download, or which
 otherwise accompanies this software in either electronic or hard copy form.
 
 You may obtain a copy of the License at
 
-https://developer.oculus.com/licenses/audio-3.3/
+http://www.oculusvr.com/licenses/LICENSE-3.1
 
-Unless required by applicable law or agreed to in writing, the Oculus Audio SDK
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
@@ -32,16 +31,13 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
     public SkinnedMeshRenderer skinnedMeshRenderer = null;
 
     // Set the blendshape index to go to (-1 means there is not one assigned)
-    [OVRNamedArray(new string[] { "sil", "PP", "FF", "TH", "DD", "kk", "CH", "SS",
-        "nn", "RR", "aa", "E", "ih", "oh", "ou" })]
     [Tooltip("Blendshape index to trigger for each viseme.")]
     public int [] visemeToBlendTargets = Enumerable.Range(0, OVRLipSync.VisemeCount).ToArray();
 
     // enable/disable sending signals to viseme engine
     [Tooltip("Enable using the test keys defined below to manually trigger each viseme.")]
     public bool enableVisemeTestKeys = false;
-    [Tooltip("Test keys used to manually trigger an individual viseme - by " +
-        "default the QWERTY row of a US keyboard.")]
+    [Tooltip("Test keys used to manually trigger an individual viseme - by default the QWERTY row of a US keyboard.")]
     public KeyCode[] visemeTestKeys =
     {
         KeyCode.BackQuote,
@@ -60,20 +56,6 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
         KeyCode.RightBracket,
         KeyCode.Backslash,
     };
-
-    [Tooltip("Test key used to manually trigger laughter and visualise the results")]
-    public KeyCode laughterKey = KeyCode.CapsLock;
-
-    [Tooltip("Blendshape index to trigger for laughter")]
-    public int laughterBlendTarget = OVRLipSync.VisemeCount;
-
-    [Range(0.0f, 1.0f)]
-    [Tooltip("Laughter probability threshold above which the laughter blendshape will be activated")]
-    public float laughterThreshold = 0.5f;
-
-    [Range(0.0f, 3.0f)]
-    [Tooltip("Laughter animation linear multiplier, the final output will be clamped to 1.0")]
-    public float laughterMultiplier = 1.5f;
 
     // smoothing amount
     [Range(1, 100)]
@@ -125,8 +107,6 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
             if (frame != null)
             {
                 SetVisemeToMorphTarget(frame);
-
-                SetLaughterToMorphTarget(frame);
             }
 
             // TEST visemes by capturing key inputs and sending a signal
@@ -152,8 +132,6 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
                 CheckVisemeKey(visemeTestKeys[i], i, 100);
             }
         }
-
-        CheckLaughterKey();
     }
 
     /// <summary>
@@ -163,34 +141,13 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
     {
         for (int i = 0; i < visemeToBlendTargets.Length; i++)
         {
-            if (visemeToBlendTargets[i] != -1)
+            if(visemeToBlendTargets[i] != -1)
             {
                 // Viseme blend weights are in range of 0->1.0, we need to make range 100
                 skinnedMeshRenderer.SetBlendShapeWeight(
                     visemeToBlendTargets[i],
                     frame.Visemes[i] * 100.0f);
             }
-        }
-    }
-
-    /// <summary>
-    /// Sets the laughter to morph target.
-    /// </summary>
-    void SetLaughterToMorphTarget(OVRLipSync.Frame frame)
-    {
-        if (laughterBlendTarget != -1)
-        {
-            // Laughter score will be raw classifier output in [0,1]
-            float laughterScore = frame.laughterScore;
-
-            // Threshold then re-map to [0,1]
-            laughterScore = laughterScore < laughterThreshold ? 0.0f : laughterScore - laughterThreshold;
-            laughterScore = Mathf.Min(laughterScore * laughterMultiplier, 1.0f);
-            laughterScore *= 1.0f / laughterThreshold;
-
-            skinnedMeshRenderer.SetBlendShapeWeight(
-                laughterBlendTarget,
-                laughterScore * 100.0f);
         }
     }
 
@@ -209,21 +166,6 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
         if (Input.GetKeyUp(key))
         {
             lipsyncContext.SetVisemeBlend(visemeToBlendTargets[viseme], 0);
-        }
-    }
-
-    /// <summary>
-    /// Sends the laughter signal.
-    /// </summary>
-    void CheckLaughterKey()
-    {
-        if (Input.GetKeyDown(laughterKey))
-        {
-            lipsyncContext.SetLaughterBlend(100);
-        }
-        if (Input.GetKeyUp(laughterKey))
-        {
-            lipsyncContext.SetLaughterBlend(0);
         }
     }
 }
