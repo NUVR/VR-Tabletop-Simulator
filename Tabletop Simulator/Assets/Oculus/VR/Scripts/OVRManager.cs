@@ -174,7 +174,7 @@ public class OVRManager : MonoBehaviour
 			if (!_isHmdPresentCached)
 			{
 				_isHmdPresentCached = true;
-				_isHmdPresent = OVRNodeStateProperties.IsHmdPresent();
+				_isHmdPresent = OVRPlugin.hmdPresent;
 			}
 
 			return _isHmdPresent;
@@ -373,7 +373,16 @@ public class OVRManager : MonoBehaviour
 	{
 		get
 		{
-			return _headPoseRelativeOffsetTranslation;
+			OVRPlugin.Quatf rotation;
+			OVRPlugin.Vector3f translation;
+			if (OVRPlugin.GetHeadPoseModifier(out rotation, out translation))
+			{
+				return translation.FromFlippedZVector3f();
+			}
+			else
+			{
+				return Vector3.zero;
+			}
 		}
 		set
 		{
@@ -1172,7 +1181,7 @@ public class OVRManager : MonoBehaviour
 
 		// Dispatch HMD events.
 
-		isHmdPresent = OVRNodeStateProperties.IsHmdPresent();
+		isHmdPresent = OVRPlugin.hmdPresent;
 
 		if (useRecommendedMSAALevel && QualitySettings.antiAliasing != display.recommendedMSAALevel)
 		{

@@ -2,19 +2,18 @@
 Filename    :   OVRLipSyncContext.cs
 Content     :   Interface to Oculus Lip-Sync engine
 Created     :   August 6th, 2015
-Copyright   :   Copyright Facebook Technologies, LLC and its affiliates.
-                All rights reserved.
+Copyright   :   Copyright 2015 Oculus VR, Inc. All Rights reserved.
 
-Licensed under the Oculus Audio SDK License Version 3.3 (the "License");
-you may not use the Oculus Audio SDK except in compliance with the License,
+Licensed under the Oculus VR Rift SDK License Version 3.1 (the "License");
+you may not use the Oculus VR Rift SDK except in compliance with the License,
 which is provided at the time of installation or download, or which
 otherwise accompanies this software in either electronic or hard copy form.
 
 You may obtain a copy of the License at
 
-https://developer.oculus.com/licenses/audio-3.3/
+http://www.oculusvr.com/licenses/LICENSE-3.1
 
-Unless required by applicable law or agreed to in writing, the Oculus Audio SDK
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
@@ -39,10 +38,7 @@ public class OVRLipSyncContextBase : MonoBehaviour
     // Public members
     public AudioSource audioSource = null;
 
-    [Tooltip("Which lip sync provider to use for viseme computation.")]
     public OVRLipSync.ContextProviders provider = OVRLipSync.ContextProviders.Enhanced;
-    [Tooltip("Enable DSP offload on supported Android devices.")]
-    public bool enableAcceleration = true;
 
     // * * * * * * * * * * * * *
     // Private members
@@ -110,8 +106,7 @@ public class OVRLipSyncContextBase : MonoBehaviour
         {
             if (context == 0)
             {
-                if (OVRLipSync.CreateContext(ref context, provider, 0, enableAcceleration)
-                    != OVRLipSync.Result.Success)
+                if (OVRLipSync.CreateContext(ref context, provider) != OVRLipSync.Result.Success)
                 {
                     Debug.LogError("OVRLipSyncContextBase.Start ERROR: Could not create" +
                         " Phoneme context.");
@@ -154,11 +149,6 @@ public class OVRLipSyncContextBase : MonoBehaviour
         return frame;
     }
 
-    /// <summary>
-    /// Sets a given viseme id blend weight to a given amount
-    /// </summary>
-    /// <param name="viseme">Integer viseme ID</param>
-    /// <param name="amount">Integer viseme amount</param>
     public void SetVisemeBlend(int viseme, int amount)
     {
         OVRLipSync.Result result =
@@ -179,30 +169,11 @@ public class OVRLipSyncContextBase : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets a given viseme id blend weight to a given amount
-    /// </summary>
-    /// <param name="amount">Integer viseme amount</param>
-    public void SetLaughterBlend(int amount)
-    {
-        OVRLipSync.Result result =
-            OVRLipSync.SendSignal(context, OVRLipSync.Signals.LaughterAmount, amount, 0);
-
-        if (result != OVRLipSync.Result.Success)
-        {
-            Debug.LogError("OVRLipSyncContextBase.SetLaughterBlend: An unexpected" +
-                " error occured.");
-        }
-    }
-
-    /// <summary>
     /// Resets the context.
     /// </summary>
     /// <returns>error code</returns>
     public OVRLipSync.Result ResetContext()
     {
-        // Reset visemes to silence etc.
-        frame.Reset();
-
         return OVRLipSync.ResetContext(context);
     }
 }
