@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class PingPongBounce : MonoBehaviour {
 
     [SerializeField]
@@ -12,18 +13,26 @@ public class PingPongBounce : MonoBehaviour {
     public float radius = 0.0F;
 
     [SerializeField]
-    public float power = 100.0F;
+    public float power = 2.0F;
 
     [SerializeField]
     public float upwardsModifier = 0.0F;
 
     private Rigidbody ball;
+    private Vector3 velocityBeforePhysicsUpdate;
 
     // Use this for initialization
     void Start () {
         ball = GetComponent<Rigidbody>();
     }
 
+    void FixedUpdate()
+    {
+        velocityBeforePhysicsUpdate = ball.velocity;
+    }
+
+    // OCE has a delayed call. Need to fix this for better physics handlers
+    // https://docs.unity3d.com/uploads/Main/monobehaviour_flowchart.svg
     private void OnCollisionEnter(Collision collision)
     {
         string collisionName = collision.gameObject.name.ToLower();
@@ -37,25 +46,15 @@ public class PingPongBounce : MonoBehaviour {
                 }
                 break;
             case "table":
-                Debug.Log(ball.velocity.y);
-                if (ball.velocity.y < 0)
+                if (velocityBeforePhysicsUpdate.y < 0)
                 {
-                    float powerMagnitude = ball.velocity.y * -1;
+                    // We want the ball to normalize at a slower rate the close it gets to the table
+                    float powerMagnitude = Mathf.Pow(velocityBeforePhysicsUpdate.y * -1, 1/5f);
+                    GetComponent<AudioSource>().Play();
                     ball.AddExplosionForce(power * powerMagnitude, ball.transform.position, radius, upwardsModifier);
                 }
                 break;
         }
-        
-        //var direction = Vector3.Reflect(ball.position.normalized, collision.contacts[0].normal);
-        //ball.velocity = direction * 5;
-        //foreach (ContactPoint contact in collision.contacts)
-        //{
-        //   print(contact.point);
-        //}
-        //Vector3 ballPosition = collision.contacts[0].point;
-        //Vector3 paddlePosition = collision.contacts[1].point;
-        //Vector3 shootDir = ballPosition - paddlePosition; // Calculate direction of the shot
-        //ball.AddForce(Camera.main.transform.forward * 5, ForceMode.Impulse);
     }
 
     // Update is called once per frame
