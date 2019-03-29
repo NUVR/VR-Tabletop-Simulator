@@ -12,12 +12,12 @@ public class TableFixing : MonoBehaviour {
     // Use this for initialization
     void Start () {
         initialPosition = ball.transform.position;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+    
+    // Update is called once per frame
+    void Update () {
 
-	}
+    }
 
     void ResetBallPosition()
     {

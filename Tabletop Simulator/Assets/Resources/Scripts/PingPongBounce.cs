@@ -7,7 +7,7 @@ public class PingPongBounce : MonoBehaviour {
     // Use this for initialization
     void Start () {
         ball = GetComponent<Rigidbody>();
-	}
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -25,6 +25,6 @@ public class PingPongBounce : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
-	}
+        
+    }
 }
