@@ -3,33 +3,44 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public event Action<OnCupCollisionArgs> OnCupCollision;
 
+    [SerializeField]
+    public Transform ball;
+
+    [SerializeField]
+    public Transform table;
+
+    private Vector3 initialPosition;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        initialPosition = ball.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (ShouldResetBall())
+        {
+            ResetBallPosition();
+        }
     }
 
-    //private void OnCupCollision(OnCupCollisionArgs args)
-    //{
-    //    Debug.Log("COLLISION");
-    //}
-}
-
-public struct OnCupCollisionArgs
-{
-    public OnCupCollisionArgs(Collision collision)
+    public void OnBallEntersCup(GameObject cup)
     {
-        collisionDetails = collision;
+        Destroy(cup);
+        ResetBallPosition();
     }
 
-    public Collision collisionDetails { get; }
+    bool ShouldResetBall()
+    {
+        return ball.position.y < table.position.y;
+    }
+
+    void ResetBallPosition()
+    {
+        ball.position = initialPosition;
+        ball.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+    }
 }

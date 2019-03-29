@@ -343,6 +343,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 13400000, guid: 384b02fc1e61f1142a2e53665bfecb9e,
         type: 2}
+    - target: {fileID: 5073319985081025673, guid: 3a0b5a7cbd19167418d1f91af9f05721,
+        type: 3}
+      propertyPath: GameController
+      value: 
+      objectReference: {fileID: 762915524}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a0b5a7cbd19167418d1f91af9f05721, type: 3}
 --- !u!4 &290541342 stripped
@@ -380,6 +385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 339167955}
+  - component: {fileID: 339167956}
   m_Layer: 0
   m_Name: Cups
   m_TagString: Untagged
@@ -412,6 +418,19 @@ Transform:
   m_Father: {fileID: 68131365}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &339167956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339167954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9c77fe18d3d0214e9623ecb59e7a198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameManager: {fileID: 762915526}
 --- !u!1 &397753515 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1331085596013808, guid: 3a0b5a7cbd19167418d1f91af9f05721,
@@ -635,6 +654,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e1263eb657b9541b2b178e001f27ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 1957305195}
+  table: {fileID: 459073558}
 --- !u!4 &776817855 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4558771172933126, guid: 3a0b5a7cbd19167418d1f91af9f05721,
@@ -1606,7 +1627,6 @@ GameObject:
   - component: {fileID: 1957305192}
   - component: {fileID: 1957305191}
   - component: {fileID: 1957305196}
-  - component: {fileID: 1957305197}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -1719,20 +1739,6 @@ MonoBehaviour:
   m_snapOrientation: 0
   m_snapOffset: {fileID: 0}
   m_grabPoints: []
---- !u!114 &1957305197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1957305190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e2c3569eb06c04e872bdf59f8174b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  table: {fileID: 459073554}
-  cupsCollidedWith: []
 --- !u!1 &2002270339 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1331085596013808, guid: 3a0b5a7cbd19167418d1f91af9f05721,
