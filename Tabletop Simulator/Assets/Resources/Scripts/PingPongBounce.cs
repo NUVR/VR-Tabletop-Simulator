@@ -2,8 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PingPongBounce : MonoBehaviour {
-    public Rigidbody ball;
+
+    [SerializeField]
+    public float dampenScale = 0.6f;
+
+    [SerializeField]
+    public float radius = 0.0F;
+
+    [SerializeField]
+    public float power = 100.0F;
+
+    [SerializeField]
+    public float upwardsModifier = 0.0F;
+
+    private Rigidbody ball;
+
     // Use this for initialization
     void Start () {
         ball = GetComponent<Rigidbody>();
@@ -11,8 +26,28 @@ public class PingPongBounce : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        var direction = Vector3.Reflect(ball.position.normalized, collision.contacts[0].normal);
-        ball.velocity = direction * 5;
+        string collisionName = collision.gameObject.name.ToLower();
+        switch(collisionName)
+        {
+            case "cup":
+                // Only dampen if ball is traveling fast
+                if (ball.velocity.magnitude > 1f)
+                {
+                    ball.velocity = ball.velocity * dampenScale;
+                }
+                break;
+            case "table":
+                Debug.Log(ball.velocity.y);
+                if (ball.velocity.y < 0)
+                {
+                    float powerMagnitude = ball.velocity.y * -1;
+                    ball.AddExplosionForce(power * powerMagnitude, ball.transform.position, radius, upwardsModifier);
+                }
+                break;
+        }
+        
+        //var direction = Vector3.Reflect(ball.position.normalized, collision.contacts[0].normal);
+        //ball.velocity = direction * 5;
         //foreach (ContactPoint contact in collision.contacts)
         //{
         //   print(contact.point);
