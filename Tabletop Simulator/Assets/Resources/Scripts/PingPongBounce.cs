@@ -49,7 +49,8 @@ public class PingPongBounce : MonoBehaviour {
                 if (velocityBeforePhysicsUpdate.y < 0)
                 {
                     // We want the ball to normalize at a slower rate the close it gets to the table
-                    float powerMagnitude = Mathf.Pow(velocityBeforePhysicsUpdate.y * -1, 1/5f);
+                    float powerMagnitude = Mathf.Log10(Mathf.Abs(velocityBeforePhysicsUpdate.y) + 2);
+                    Debug.Log(velocityBeforePhysicsUpdate.y + " " + powerMagnitude);
                     GetComponent<AudioSource>().Play();
                     ball.AddExplosionForce(power * powerMagnitude, ball.transform.position, radius, upwardsModifier);
                 }

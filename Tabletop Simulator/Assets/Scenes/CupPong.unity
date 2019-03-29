@@ -1767,8 +1767,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dampenScale: 0.6
   radius: 0
-  power: 2
-  upwardsModifier: 0
+  power: 4
+  upwardsModifier: 10
 --- !u!82 &1957305198
 AudioSource:
   m_ObjectHideFlags: 0
