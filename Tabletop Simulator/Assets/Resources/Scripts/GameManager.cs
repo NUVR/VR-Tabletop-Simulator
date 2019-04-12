@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     public Transform table;
 
+    // Blur delegater
+    public delegate void Delegate();
+    public Delegate IncreaseBlur;
+
     private Vector3 initialPosition;
 
     // Start is called before the first frame update
@@ -31,6 +35,7 @@ public class GameManager : MonoBehaviour
     {
         Destroy(cup);
         ResetBallPosition();
+        HydrateView();
     }
 
     bool ShouldResetBall()
@@ -42,5 +47,10 @@ public class GameManager : MonoBehaviour
     {
         ball.position = initialPosition;
         ball.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+    }
+
+    void HydrateView()
+    {
+        IncreaseBlur();
     }
 }
