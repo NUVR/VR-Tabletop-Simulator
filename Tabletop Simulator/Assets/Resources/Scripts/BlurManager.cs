@@ -35,7 +35,7 @@ public class BlurManager : MonoBehaviour
         }
 
         // In seconds
-        float TIME_TO_COMPLETE = 4;
+        float TIME_TO_COMPLETE = 20;
         float frameBlur = blurToApply / (25 * TIME_TO_COMPLETE);
 
         float FLOAT_OFF_THRESHOLD = 0.000001f;
